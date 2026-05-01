@@ -3,7 +3,8 @@
 .root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: #f7f7ff;
   font-family: var(--font-inter), -apple-system, sans-serif;
 }
@@ -116,41 +117,69 @@
 /* ── Main Layout ── */
 .main {
   flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: 240px 1fr 240px;
-  gap: 16px;
-  padding: 16px;
-  overflow: visible;
+  grid-template-columns: 350px 1fr 400px;
+  gap: 20px;
+  padding: 20px;
+  overflow: hidden;
 }
 
 /* ── Sidebars ── */
-.sideLeft,
-.sideRight {
+.sidePanel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  height: 100%;
+  min-height: 0;
 }
 
-.sideLeft > *,
-.sideRight > * {
-  height: 350px;
-  margin-bottom: 12px;
+.chatPanel {
+  height: 100%;
 }
 
-/* ── Center Column ── */
-.center {
+.centerPanel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+  min-height: 0;
+  height: 100%;
 }
 
-.infographic {
-  height: 400px;
-  margin-bottom: 16px;
+.infographicBox {
+  flex: 1;
+  min-height: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-.chat {
-  height: 600px;
+.statsQuickView {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.quickStat {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1.5px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.quickStat span {
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.quickStat strong {
+  font-size: 1.25rem;
+  color: #000080;
 }
 
 /* ── Footer ── */

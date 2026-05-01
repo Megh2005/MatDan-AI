@@ -1,11 +1,11 @@
 'use client';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, Users, Vote, ClipboardList, Megaphone, BarChart3 } from 'lucide-react';
+import { CheckCircle2, Users, Vote, ClipboardList, Megaphone, BarChart3, Gavel, Shield } from 'lucide-react';
 import styles from './InfographicCanvas.module.css';
 
 export type UIAction = {
-  action: 'show_timeline' | 'show_evm' | 'show_stats' | 'reset';
+  action: 'show_timeline' | 'show_evm' | 'show_stats' | 'show_law' | 'reset';
   data?: Record<string, unknown>;
 };
 
@@ -29,6 +29,9 @@ export const InfographicCanvas: React.FC<Props> = ({ currentAction, selectedStat
         )}
         {currentAction?.action === 'show_stats' && (
           <StatsView key="stats" state={selectedState} />
+        )}
+        {currentAction?.action === 'show_law' && (
+          <LawView key="law" />
         )}
       </AnimatePresence>
     </div>
@@ -58,11 +61,6 @@ const HomeView: React.FC<{ selectedState: string }> = ({ selectedState }) => (
           />
         ))}
       </svg>
-      <div className={styles.chakraOverlay}>
-        <span className={styles.saffronDot}></span>
-        <span className={styles.whiteDot}></span>
-        <span className={styles.greenDot}></span>
-      </div>
     </div>
     <h2 className={styles.homeTitle}>लोकतंत्र की शक्ति</h2>
     <p className={styles.homeSubtitle}>The Power of Democracy</p>
@@ -74,7 +72,6 @@ const HomeView: React.FC<{ selectedState: string }> = ({ selectedState }) => (
       <span className={styles.pill} style={{ background: 'rgba(0,0,128,0.07)', color: '#000080', border: '1px solid #000080' }}>960M+ Voters</span>
       <span className={styles.pill} style={{ background: 'rgba(19,136,8,0.08)', color: '#0a5e04', border: '1px solid #138808' }}>1M+ Polling Booths</span>
     </div>
-    <p className={styles.homeHint}>← Ask Matdata to explore election topics</p>
   </motion.div>
 );
 
@@ -94,7 +91,6 @@ const TimelineView: React.FC<{ activeStep: number }> = ({ activeStep }) => (
     initial={{ opacity: 0, y: 16 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -16 }}
-    transition={{ duration: 0.3 }}
   >
     <h3 className={styles.viewTitle}>Election Process Timeline</h3>
     <div className={styles.timeline}>
@@ -125,7 +121,6 @@ const EVMView: React.FC<{ highlight?: string }> = ({ highlight }) => (
     initial={{ opacity: 0, x: 16 }}
     animate={{ opacity: 1, x: 0 }}
     exit={{ opacity: 0, x: -16 }}
-    transition={{ duration: 0.3 }}
   >
     <h3 className={styles.viewTitle}>Electronic Voting Machine (EVM)</h3>
     <div className={styles.evmRow}>
@@ -145,36 +140,63 @@ const EVMView: React.FC<{ highlight?: string }> = ({ highlight }) => (
         </div>
       ))}
     </div>
-    <div className={styles.evmNote}>EVM data is stored in a secure chip. Not connected to the internet. Tamper-proof by design.</div>
   </motion.div>
 );
 
 /* ── Stats ── */
-const STATS = [
-  { val: '960M+', label: 'Registered Voters', color: '#FF9933' },
-  { val: '543', label: 'Lok Sabha Seats', color: '#000080' },
-  { val: '4,120+', label: 'Vidhan Sabha Seats', color: '#138808' },
-  { val: '1M+', label: 'Polling Stations', color: '#FF9933' },
-  { val: '7', label: 'Phases (2024)', color: '#000080' },
-  { val: '66.3%', label: 'Voter Turnout 2024', color: '#138808' },
-];
-
 const StatsView: React.FC<{ state?: string }> = ({ state }) => (
   <motion.div
     className={styles.statsView}
     initial={{ opacity: 0, scale: 0.97 }}
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0 }}
-    transition={{ duration: 0.3 }}
   >
     <h3 className={styles.viewTitle}>Election Statistics {state ? `— ${state}` : '(India)'}</h3>
     <div className={styles.statsGrid}>
-      {STATS.map((s, i) => (
+      {[
+        { val: '960M+', label: 'Registered Voters', color: '#FF9933' },
+        { val: '543', label: 'Lok Sabha Seats', color: '#000080' },
+        { val: '4,120+', label: 'Vidhan Sabha Seats', color: '#138808' },
+        { val: '1M+', label: 'Polling Stations', color: '#FF9933' },
+      ].map((s, i) => (
         <div key={i} className={styles.statCard} style={{ borderTopColor: s.color }}>
           <div className={styles.statVal} style={{ color: s.color }}>{s.val}</div>
           <div className={styles.statLabel}>{s.label}</div>
         </div>
       ))}
+    </div>
+  </motion.div>
+);
+
+/* ── Law View ── */
+const LawView: React.FC = () => (
+  <motion.div
+    className={styles.lawView}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+  >
+    <h3 className={styles.viewTitle}>Legal & Identification Framework</h3>
+    <div className={styles.lawGrid}>
+      <div className={styles.lawColumn}>
+        <h4><Gavel size={18} /> Important Laws</h4>
+        <ul>
+          <li><strong>RP Act 1951:</strong> The Bible of Indian elections.</li>
+          <li><strong>Article 324:</strong> Constitutional power of ECI.</li>
+          <li><strong>MCC:</strong> Rules for fair campaigning.</li>
+        </ul>
+      </div>
+      <div className={styles.lawColumn}>
+        <h4><Shield size={18} /> Valid IDs</h4>
+        <ul>
+          <li>Voter ID (EPIC)</li>
+          <li>Aadhaar / PAN Card</li>
+          <li>Passport / Driving License</li>
+        </ul>
+      </div>
+    </div>
+    <div className={styles.voterSlipNote}>
+      <strong>Note on Voter Slip:</strong> The Voter Information Slip (VIS) helps you find your booth but is <u>not</u> a valid ID on its own.
     </div>
   </motion.div>
 );

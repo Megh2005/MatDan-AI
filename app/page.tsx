@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { InfographicCanvas, UIAction } from './components/InfographicCanvas';
 import { ChatInterface } from './components/ChatInterface';
-import { ProcessInfo } from './components/ProcessInfo';
+import { TripleTabs } from './components/TripleTabs';
 import { StateFilter } from './components/StateFilter';
 import { EVMIcon } from './components/EVMIcon';
 import styles from './page.module.css';
@@ -23,16 +23,14 @@ export default function Home() {
 
   return (
     <div className={styles.root}>
-      {/* ── Tricolor flag border stripes ── */}
       <div className={styles.flagStripe} data-color="saffron" />
 
-      {/* ── Header ── */}
       <header className={styles.header}>
         <div className={styles.brand}>
           <EVMIcon size={40} />
           <div className={styles.brandText}>
             <span className={styles.brandName}>Matdata <span className={styles.ai}>AI</span></span>
-            <span className={styles.brandTag}>India's Election Intelligence Portal</span>
+            <span className={styles.brandTag}>Democratic Intelligence Portal</span>
           </div>
         </div>
 
@@ -43,60 +41,62 @@ export default function Home() {
         <nav className={styles.headerRight}>
           <button
             className={styles.navBtn}
-            onClick={() => setCurrentAction({ action: 'show_timeline', data: { activeStep: 0 } })}
-          >📅 Timeline</button>
-          <button
-            className={styles.navBtn}
             onClick={() => setCurrentAction({ action: 'show_evm' })}
-          >🗳️ EVM</button>
+          >🗳️ EVM Guide</button>
           <button
             className={styles.navBtn}
-            onClick={() => setCurrentAction({ action: 'show_stats' })}
-          >📊 Stats</button>
+            onClick={() => setCurrentAction({ action: 'show_law' })}
+          >⚖️ Law & ID</button>
           <button
             className={`${styles.navBtn} ${styles.resetBtn}`}
             onClick={() => setCurrentAction({ action: 'reset' })}
-          >⟳ Reset</button>
+          >⟳ Reset View</button>
         </nav>
       </header>
 
-      {/* ── Main 3-column grid ── */}
       <main className={styles.main}>
-
-        {/* LEFT — Info panels stacked */}
-        <aside className={styles.sideLeft}>
-          <ProcessInfo type="voter" />
-          <ProcessInfo type="mcc" />
+        {/* Left Column - Tabbed Information Hub */}
+        <aside className={styles.sidePanel}>
+          <TripleTabs />
         </aside>
 
-        {/* CENTER — Infographic on top + Chat below */}
-        <section className={styles.center}>
-          <div className={styles.infographic}>
+        {/* Center Column - Interactive Infographics */}
+        <section className={styles.centerPanel}>
+          <div className={styles.infographicBox}>
             <InfographicCanvas currentAction={currentAction} selectedState={selectedState} />
           </div>
-          <div className={styles.chat}>
-            <ChatInterface onMessageReceived={handleMessage} selectedState={selectedState} />
+          <div className={styles.statsQuickView}>
+            <div className={styles.quickStat}>
+              <span>Total Seats</span>
+              <strong>543</strong>
+            </div>
+            <div className={styles.quickStat}>
+              <span>Voters</span>
+              <strong>960M+</strong>
+            </div>
+            <div className={styles.quickStat}>
+              <span>Stations</span>
+              <strong>1M+</strong>
+            </div>
           </div>
         </section>
 
-        {/* RIGHT — Info panels stacked */}
-        <aside className={styles.sideRight}>
-          <ProcessInfo type="candidate" />
-          <ProcessInfo type="dates" />
+        {/* Right Column - Chat Assistant */}
+        <aside className={`${styles.sidePanel} ${styles.chatPanel}`}>
+          <ChatInterface onMessageReceived={handleMessage} selectedState={selectedState} />
         </aside>
-
       </main>
 
-      {/* ── Footer ── */}
       <footer className={styles.footer}>
         <div className={styles.footerLeft}>
           <span className={styles.saffron}>■</span>
           <span className={styles.white}>■</span>
           <span className={styles.green}>■</span>
-          <span>Election Commission of India</span>
+          <span>Knowledge is Power · Every Vote Counts</span>
         </div>
-        <div>© 2026 Matdata AI · All rights reserved</div>
-        <div className={styles.footerRight}>Helpline: <strong>1950</strong> · cVIGIL App</div>
+        <div className={styles.footerRight}>
+          Helpline: <strong>1950</strong> · Use <strong>cVIGIL</strong> for violations
+        </div>
       </footer>
 
       <div className={styles.flagStripe} data-color="green" />

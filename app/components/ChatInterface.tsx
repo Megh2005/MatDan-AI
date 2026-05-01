@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, ChevronDown } from 'lucide-react';
+import { Send, Loader2 } from 'lucide-react';
 import { EVMIcon } from './EVMIcon';
 import styles from './ChatInterface.module.css';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -92,15 +94,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
     sendMessage(input);
   };
 
-  // Render markdown-like bold
-  const renderText = (text: string) => {
-    const cleaned = text.replace(/\[UI_ACTION:.*?\]/g, '').trim();
-    const parts = cleaned.split(/(\*\*.*?\*\*)/g);
-    return parts.map((part, i) =>
-      part.startsWith('**') && part.endsWith('**')
-        ? <strong key={i}>{part.slice(2, -2)}</strong>
-        : <span key={i}>{part}</span>
-    );
+  // Helper to clean message content
+  const getCleanContent = (text: string) => {
+    return text.replace(/\[UI_ACTION:.*?\]/g, '').trim();
   };
 
   return (
@@ -139,7 +135,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
             {m.role === 'assistant' && (
               <div className={styles.msgAvatar}><EVMIcon size={22} /></div>
             )}
-            <div className={styles.msgBubble}>{renderText(m.content)}</div>
+            <div className={styles.msgBubble}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {getCleanContent(m.content)}
+              </ReactMarkdown>
+            </div>
             {m.role === 'user' && (
               <div className={styles.userAvatar}>You</div>
             )}

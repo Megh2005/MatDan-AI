@@ -17,7 +17,7 @@ User will ask about a specific election process or law. Provide a direct, factua
 export async function POST(req: NextRequest) {
   try {
     const { topic, detail } = await req.json();
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `${INFO_SYSTEM_PROMPT}\n\nTopic: ${topic}\nContext: ${detail}`;
 

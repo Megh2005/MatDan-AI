@@ -5,6 +5,7 @@ import styles from './ModalAI.module.css';
 import { X, Loader2, ShieldCheck } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import toast from 'react-hot-toast';
 
 interface ModalAIProps {
   isOpen: boolean;
@@ -34,9 +35,15 @@ export const ModalAI: React.FC<ModalAIProps> = ({ isOpen, onClose, topic, detail
         body: JSON.stringify({ topic, detail }),
       });
       const data = await res.json();
-      setResponse(data.text || "Could not fetch information at this moment.");
+      if (data.text) {
+        setResponse(data.text);
+      } else {
+        toast.error("Failed to fetch election details.");
+        onClose();
+      }
     } catch (err) {
-      setResponse("Error connecting to the election database. Please try again.");
+      toast.error("ECI Database connection failed.");
+      onClose();
     } finally {
       setIsLoading(false);
     }

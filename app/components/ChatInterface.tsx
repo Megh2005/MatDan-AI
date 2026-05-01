@@ -6,6 +6,7 @@ import { EVMIcon } from './EVMIcon';
 import styles from './ChatInterface.module.css';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import toast from 'react-hot-toast';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -84,9 +85,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
       if (data.text) {
         setMessages(prev => [...prev, { role: 'assistant', content: data.text }]);
         onMessageReceived(data.text);
+      } else if (data.error) {
+        toast.error(`AI Error: ${data.error}`);
       }
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'assistant', content: "I encountered an error. Please try again." }]);
+      toast.error("Connection error. Please check your network.");
     } finally {
       setIsLoading(false);
     }

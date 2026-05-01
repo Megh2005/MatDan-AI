@@ -1,29 +1,40 @@
-.filterContainer {
+/* StateFilter.module.css */
+
+.filterWrap {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 6px;
   background: white;
-  padding: 0.75rem 1.5rem;
+  padding: 6px 14px 6px 10px;
   border-radius: 99px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid #eee;
+  border: 1.5px solid #d0d0ee;
+  box-shadow: 0 2px 8px rgba(0,0,128,0.06);
+  transition: border-color 0.2s;
+}
+
+.filterWrap:focus-within {
+  border-color: #000080;
 }
 
 .label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #138808; /* Indian Green */
-  font-weight: 600;
-  font-size: 0.9rem;
+  gap: 4px;
+  color: #138808;
+  font-weight: 700;
+  font-size: 0.78rem;
+  white-space: nowrap;
 }
 
 .select {
   border: none;
   background: transparent;
-  font-weight: 500;
-  color: #333;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1a1a3e;
   outline: none;
   cursor: pointer;
-  min-width: 150px;
+  min-width: 120px;
+  max-width: 160px;
+  font-family: var(--font-inter), sans-serif;
 }

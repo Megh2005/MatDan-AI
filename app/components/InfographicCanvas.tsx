@@ -1,130 +1,180 @@
+'use client';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import styles from './InfographicCanvas.module.css';
-import { AshokaChakra } from './AshokaChakra';
 import { CheckCircle2, Users, Vote, ClipboardList, Megaphone, BarChart3 } from 'lucide-react';
+import styles from './InfographicCanvas.module.css';
 
 export type UIAction = {
   action: 'show_timeline' | 'show_evm' | 'show_stats' | 'reset';
-  data?: any;
+  data?: Record<string, unknown>;
 };
 
-interface InfographicCanvasProps {
+interface Props {
   currentAction: UIAction | null;
+  selectedState: string;
 }
 
-export const InfographicCanvas: React.FC<InfographicCanvasProps> = ({ currentAction }) => {
+export const InfographicCanvas: React.FC<Props> = ({ currentAction, selectedState }) => {
+  const isReset = !currentAction || currentAction.action === 'reset';
+
   return (
-    <div className={styles.canvasContainer}>
+    <div className={styles.canvas}>
       <AnimatePresence mode="wait">
-        {!currentAction || currentAction.action === 'reset' ? (
-          <motion.div
-            key="branding"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            className={styles.brandingView}
-          >
-            <AshokaChakra size={200} />
-            <h2 className={styles.brandingTitle}>Elections in India</h2>
-            <p className={styles.brandingSubtitle}>The World's Largest Democratic Exercise</p>
-          </motion.div>
-        ) : currentAction.action === 'show_timeline' ? (
-          <TimelineView key="timeline" activeStep={currentAction.data?.activeStep || 0} />
-        ) : currentAction.action === 'show_evm' ? (
-          <EVMView key="evm" highlight={currentAction.data?.highlight} />
-        ) : currentAction.action === 'show_stats' ? (
-          <StatsView key="stats" topic={currentAction.data?.topic} />
-        ) : null}
+        {isReset && <HomeView key="home" selectedState={selectedState} />}
+        {currentAction?.action === 'show_timeline' && (
+          <TimelineView key="timeline" activeStep={(currentAction.data?.activeStep as number) ?? 0} />
+        )}
+        {currentAction?.action === 'show_evm' && (
+          <EVMView key="evm" highlight={currentAction.data?.highlight as string} />
+        )}
+        {currentAction?.action === 'show_stats' && (
+          <StatsView key="stats" state={selectedState} />
+        )}
       </AnimatePresence>
     </div>
   );
 };
 
-const TimelineView: React.FC<{ activeStep: number }> = ({ activeStep }) => {
-  const steps = [
-    { title: 'Notification', icon: <Megaphone />, desc: 'Election Commission issues formal notification.' },
-    { title: 'Nominations', icon: <ClipboardList />, desc: 'Candidates file nomination papers.' },
-    { title: 'Campaigning', icon: <Users />, desc: 'Parties reach out to voters.' },
-    { title: 'Polling', icon: <Vote />, desc: 'Voters cast their ballots.' },
-    { title: 'Counting', icon: <BarChart3 />, desc: 'Votes are counted securely.' },
-    { title: 'Results', icon: <CheckCircle2 />, desc: 'Winners are announced.' },
-  ];
-
-  return (
-    <motion.div 
-      className={styles.timelineContainer}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
-      <h3>Election Timeline</h3>
-      <div className={styles.timelineGrid}>
-        {steps.map((step, i) => (
-          <div 
-            key={i} 
-            className={`${styles.stepCard} ${i === activeStep ? styles.activeStep : ''} ${i < activeStep ? styles.completedStep : ''}`}
-          >
-            <div className={styles.stepIcon}>{step.icon}</div>
-            <h4>{step.title}</h4>
-            <p>{step.desc}</p>
-          </div>
+/* ── Home / Branding ── */
+const HomeView: React.FC<{ selectedState: string }> = ({ selectedState }) => (
+  <motion.div
+    className={styles.homeView}
+    initial={{ opacity: 0, scale: 0.97 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 1.03 }}
+    transition={{ duration: 0.3 }}
+  >
+    <div className={styles.chakraWrap}>
+      <svg viewBox="0 0 120 120" width={120} height={120}>
+        <circle cx="60" cy="60" r="56" fill="none" stroke="#000080" strokeWidth="3" />
+        <circle cx="60" cy="60" r="10" fill="none" stroke="#000080" strokeWidth="2" />
+        {[...Array(24)].map((_, i) => (
+          <line
+            key={i}
+            x1="60" y1="60"
+            x2={60 + 56 * Math.cos((i * 15 * Math.PI) / 180)}
+            y2={60 + 56 * Math.sin((i * 15 * Math.PI) / 180)}
+            stroke="#000080" strokeWidth="1.5"
+          />
         ))}
+      </svg>
+      <div className={styles.chakraOverlay}>
+        <span className={styles.saffronDot}></span>
+        <span className={styles.whiteDot}></span>
+        <span className={styles.greenDot}></span>
       </div>
-    </motion.div>
-  );
-};
+    </div>
+    <h2 className={styles.homeTitle}>लोकतंत्र की शक्ति</h2>
+    <p className={styles.homeSubtitle}>The Power of Democracy</p>
+    {selectedState && (
+      <div className={styles.stateLabel}>📍 Viewing: <strong>{selectedState}</strong></div>
+    )}
+    <div className={styles.homePills}>
+      <span className={styles.pill} style={{ background: 'rgba(255,153,51,0.1)', color: '#c96f00', border: '1px solid #FF9933' }}>543 Lok Sabha Seats</span>
+      <span className={styles.pill} style={{ background: 'rgba(0,0,128,0.07)', color: '#000080', border: '1px solid #000080' }}>960M+ Voters</span>
+      <span className={styles.pill} style={{ background: 'rgba(19,136,8,0.08)', color: '#0a5e04', border: '1px solid #138808' }}>1M+ Polling Booths</span>
+    </div>
+    <p className={styles.homeHint}>← Ask Matdata to explore election topics</p>
+  </motion.div>
+);
 
-const EVMView: React.FC<{ highlight?: string }> = ({ highlight }) => {
-  return (
-    <motion.div 
-      className={styles.evmContainer}
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-    >
-      <h3>EVM & VVPAT System</h3>
-      <div className={styles.evmGrid}>
-        <div className={`${styles.evmPart} ${highlight === 'control_unit' ? styles.highlight : ''}`}>
-          <div className={styles.partLabel}>Control Unit</div>
-          <div className={styles.partBox}>CU</div>
-          <p>Managed by the Presiding Officer.</p>
-        </div>
-        <div className={`${styles.evmPart} ${highlight === 'ballot_unit' ? styles.highlight : ''}`}>
-          <div className={styles.partLabel}>Ballot Unit</div>
-          <div className={styles.partBox}>BU</div>
-          <p>Where the voter presses the button.</p>
-        </div>
-        <div className={`${styles.evmPart} ${highlight === 'vvpat' ? styles.highlight : ''}`}>
-          <div className={styles.partLabel}>VVPAT</div>
-          <div className={styles.partBox}>VVPAT</div>
-          <p>Verification slip for the voter.</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+/* ── Timeline ── */
+const STEPS = [
+  { title: 'Notification', icon: <Megaphone size={18} />, desc: 'ECI issues formal gazette notification announcing elections.' },
+  { title: 'Nominations', icon: <ClipboardList size={18} />, desc: 'Candidates file nomination papers & affidavits.' },
+  { title: 'Campaigning', icon: <Users size={18} />, desc: 'Political parties campaign across constituencies.' },
+  { title: 'Polling', icon: <Vote size={18} />, desc: 'Voters cast ballots on EVM machines.' },
+  { title: 'Counting', icon: <BarChart3 size={18} />, desc: 'Votes counted under strict EC supervision.' },
+  { title: 'Results', icon: <CheckCircle2 size={18} />, desc: 'Winners declared and government formation begins.' },
+];
 
-const StatsView: React.FC<{ topic?: string }> = ({ topic }) => {
-  return (
-    <motion.div 
-      className={styles.statsContainer}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-    >
-      <h3>Election Insights: {topic || 'General'}</h3>
-      <div className={styles.statsGrid}>
-        <div className={styles.statItem}>
-          <div className={styles.statValue}>960M+</div>
-          <div className={styles.statLabel}>Registered Voters</div>
+const TimelineView: React.FC<{ activeStep: number }> = ({ activeStep }) => (
+  <motion.div
+    className={styles.timelineView}
+    initial={{ opacity: 0, y: 16 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -16 }}
+    transition={{ duration: 0.3 }}
+  >
+    <h3 className={styles.viewTitle}>Election Process Timeline</h3>
+    <div className={styles.timeline}>
+      {STEPS.map((s, i) => (
+        <React.Fragment key={i}>
+          <div className={`${styles.step} ${i === activeStep ? styles.activeStep : ''} ${i < activeStep ? styles.doneStep : ''}`}>
+            <div className={styles.stepCircle}>
+              {i < activeStep ? <CheckCircle2 size={16} /> : s.icon}
+            </div>
+            <div className={styles.stepBody}>
+              <div className={styles.stepTitle}>{s.title}</div>
+              <div className={styles.stepDesc}>{s.desc}</div>
+            </div>
+          </div>
+          {i < STEPS.length - 1 && (
+            <div className={`${styles.connector} ${i < activeStep ? styles.connectorDone : ''}`}></div>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  </motion.div>
+);
+
+/* ── EVM ── */
+const EVMView: React.FC<{ highlight?: string }> = ({ highlight }) => (
+  <motion.div
+    className={styles.evmView}
+    initial={{ opacity: 0, x: 16 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -16 }}
+    transition={{ duration: 0.3 }}
+  >
+    <h3 className={styles.viewTitle}>Electronic Voting Machine (EVM)</h3>
+    <div className={styles.evmRow}>
+      {[
+        { key: 'control_unit', label: 'Control Unit', abbr: 'CU', color: '#000080', desc: 'Operated by Presiding Officer. Enables voting.' },
+        { key: 'ballot_unit', label: 'Ballot Unit', abbr: 'BU', color: '#FF9933', desc: 'Voters press candidate button here.' },
+        { key: 'vvpat', label: 'VVPAT', abbr: 'VV', color: '#138808', desc: 'Paper slip visible for 7 seconds. Voter verification.' },
+      ].map(({ key, label, abbr, color, desc }) => (
+        <div
+          key={key}
+          className={`${styles.evmCard} ${highlight === key ? styles.evmHighlight : ''}`}
+          style={{ '--accent': color } as React.CSSProperties}
+        >
+          <div className={styles.evmBox} style={{ background: color }}>{abbr}</div>
+          <div className={styles.evmLabel}>{label}</div>
+          <p className={styles.evmDesc}>{desc}</p>
         </div>
-        <div className={styles.statItem}>
-          <div className={styles.statValue}>1M+</div>
-          <div className={styles.statLabel}>Polling Stations</div>
+      ))}
+    </div>
+    <div className={styles.evmNote}>EVM data is stored in a secure chip. Not connected to the internet. Tamper-proof by design.</div>
+  </motion.div>
+);
+
+/* ── Stats ── */
+const STATS = [
+  { val: '960M+', label: 'Registered Voters', color: '#FF9933' },
+  { val: '543', label: 'Lok Sabha Seats', color: '#000080' },
+  { val: '4,120+', label: 'Vidhan Sabha Seats', color: '#138808' },
+  { val: '1M+', label: 'Polling Stations', color: '#FF9933' },
+  { val: '7', label: 'Phases (2024)', color: '#000080' },
+  { val: '66.3%', label: 'Voter Turnout 2024', color: '#138808' },
+];
+
+const StatsView: React.FC<{ state?: string }> = ({ state }) => (
+  <motion.div
+    className={styles.statsView}
+    initial={{ opacity: 0, scale: 0.97 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <h3 className={styles.viewTitle}>Election Statistics {state ? `— ${state}` : '(India)'}</h3>
+    <div className={styles.statsGrid}>
+      {STATS.map((s, i) => (
+        <div key={i} className={styles.statCard} style={{ borderTopColor: s.color }}>
+          <div className={styles.statVal} style={{ color: s.color }}>{s.val}</div>
+          <div className={styles.statLabel}>{s.label}</div>
         </div>
-        <div className={styles.statItem}>
-          <div className={styles.statValue}>543</div>
-          <div className={styles.statLabel}>Lok Sabha Seats</div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+      ))}
+    </div>
+  </motion.div>
+);

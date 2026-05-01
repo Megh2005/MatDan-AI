@@ -1,173 +1,284 @@
-.canvasContainer {
+/* InfographicCanvas.module.css */
+
+.canvas {
   width: 100%;
   height: 100%;
+  background: linear-gradient(160deg, #f9f9ff 0%, #f0f4ff 100%);
+  border-radius: 16px;
+  border: 1.5px solid #e8e8f8;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-  overflow-y: auto;
+  position: relative;
 }
 
-.brandingView {
-  text-align: center;
+/* ── Home View ── */
+.homeView {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 20px;
+  width: 100%;
 }
 
-.brandingTitle {
-  font-size: 3rem;
+.chakraWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: rotate 45s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.chakraOverlay {
+  display: none;
+}
+
+.homeTitle {
+  font-size: 2rem;
   font-weight: 800;
-  margin-top: 1.5rem;
   color: #000080;
   letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.1;
 }
 
-.brandingSubtitle {
-  font-size: 1.25rem;
-  color: #666;
-  margin-top: 0.5rem;
+.homeSubtitle {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0;
 }
 
-/* Timeline Styles */
-.timelineContainer {
-  width: 100%;
-  max-width: 800px;
+.stateLabel {
+  background: rgba(19,136,8,0.08);
+  border: 1px solid rgba(19,136,8,0.3);
+  color: #0a5e04;
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  border-radius: 99px;
 }
 
-.timelineContainer h3 {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  color: #000080;
-  text-align: center;
-}
-
-.timelineGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.stepCard {
-  padding: 1.5rem;
-  background: white;
-  border-radius: 16px;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-}
-
-.activeStep {
-  border-color: #FF9933;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(255, 153, 51, 0.2);
-}
-
-.completedStep {
-  background: rgba(19, 136, 8, 0.08);
-  border-color: #138808;
-}
-
-.stepIcon {
-  width: 40px;
-  height: 40px;
+.homePills {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8f9fa;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  color: #000080;
-}
-
-.activeStep .stepIcon {
-  background: #FF9933;
-  color: white;
-}
-
-.stepCard h4 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.stepCard p {
-  font-size: 0.875rem;
-  color: #666;
-  line-height: 1.4;
-}
-
-/* EVM Styles */
-.evmContainer {
-  width: 100%;
-  max-width: 700px;
-  text-align: center;
-}
-
-.evmGrid {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 2rem;
+  gap: 8px;
   flex-wrap: wrap;
-}
-
-.evmPart {
-  width: 180px;
-  padding: 1rem;
-  background: white;
-  border-radius: 12px;
-  border: 2px solid #eee;
-  transition: all 0.3s ease;
-}
-
-.highlight {
-  border-color: #138808;
-  background: rgba(19, 136, 8, 0.08);
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(19, 136, 8, 0.15);
-}
-
-.partBox {
-  height: 100px;
-  background: #333;
-  color: white;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  margin: 1rem 0;
-  font-weight: bold;
 }
 
-/* Stats Styles */
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-top: 2rem;
+.pill {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 99px;
 }
 
-.statItem {
-  text-align: center;
-  padding: 2rem;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+.homeHint {
+  font-size: 0.75rem;
+  color: #bbb;
+  margin: 0;
 }
 
-.statValue {
-  font-size: 2.5rem;
-  font-weight: 800;
+/* ── Timeline View ── */
+.timelineView {
+  width: 100%;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.viewTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000080;
+  margin: 0 0 6px 0;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+.step:hover {
+  background: rgba(0,0,128,0.04);
+}
+
+.activeStep .stepCircle {
+  background: #FF9933 !important;
+  color: white !important;
+  border-color: #FF9933 !important;
+  box-shadow: 0 0 0 4px rgba(255,153,51,0.2);
+}
+
+.activeStep .stepTitle {
   color: #FF9933;
 }
 
-.statLabel {
+.doneStep .stepCircle {
+  background: #138808 !important;
+  border-color: #138808 !important;
+  color: white !important;
+}
+
+.doneStep .stepTitle {
+  color: #138808;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.stepCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #d0d0ee;
+  background: #f0f0ff;
+  color: #000080;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.stepBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.stepTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a3e;
+  transition: color 0.3s;
+}
+
+.stepDesc {
+  font-size: 0.76rem;
+  color: #888;
+  margin-top: 1px;
+}
+
+.connector {
+  width: 2px;
+  height: 12px;
+  background: #dde;
+  margin-left: 25px;
+  transition: background 0.3s;
+}
+
+.connectorDone {
+  background: #138808;
+}
+
+/* ── EVM View ── */
+.evmView {
+  width: 100%;
+  padding: 16px 20px;
+}
+
+.evmRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.evmCard {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  background: white;
+  border: 2px solid #eee;
+  text-align: center;
+  transition: all 0.25s;
+}
+
+.evmHighlight {
+  border-color: var(--accent);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--accent) 20%, transparent);
+  transform: translateY(-4px);
+}
+
+.evmBox {
+  height: 60px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1rem;
-  color: #666;
-  margin-top: 0.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.evmLabel {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1a1a3e;
+}
+
+.evmDesc {
+  font-size: 0.74rem;
+  color: #888;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.evmNote {
+  margin-top: 12px;
+  font-size: 0.75rem;
+  color: #138808;
+  background: rgba(19,136,8,0.06);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border-left: 3px solid #138808;
+}
+
+/* ── Stats View ── */
+.statsView {
+  width: 100%;
+  padding: 16px 20px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.statCard {
+  background: white;
+  border-radius: 10px;
+  padding: 14px;
+  border-top: 3px solid;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.statVal {
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  color: #888;
+  margin-top: 4px;
 }

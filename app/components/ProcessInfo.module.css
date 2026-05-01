@@ -1,38 +1,62 @@
-.infoCard {
+/* ProcessInfo.module.css */
+
+.panel {
   background: white;
-  padding: 1.25rem;
-  border-radius: 16px;
-  border-left: 4px solid #FF9933; /* Indian Saffron */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  border: 1.5px solid #e8e8f5;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.infoTitle {
+.panelHeader {
+  padding: 10px 14px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  color: #000080;
+  gap: 8px;
+  border-bottom: 1.5px solid #eeeeff;
+  flex-shrink: 0;
 }
 
-.infoTitle h4 {
-  font-size: 1rem;
+.icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.panelTitle {
+  font-size: 0.82rem;
   font-weight: 700;
-  margin: 0;
+  color: #1a1a3e;
 }
 
-.infoList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.panelBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.infoList li {
-  font-size: 0.85rem;
-  color: #555;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid #f0f0f0;
+.item {
+  padding: 8px 10px;
+  background: #f9f9ff;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: #444;
+  line-height: 1.4;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  cursor: default;
 }
 
-.infoList li:last-child {
-  border-bottom: none;
+.item:hover {
+  background: #f0f0ff;
+  transform: translateX(2px);
 }

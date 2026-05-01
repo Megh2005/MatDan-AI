@@ -25,11 +25,15 @@ Always provide a concise text explanation alongside any UI action.
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // Find the index of the first user message
+    const firstUserIndex = messages.findIndex((m: any) => m.role === "user");
+    const historyMessages = firstUserIndex !== -1 ? messages.slice(firstUserIndex, -1) : [];
 
     // Format chat history for Gemini
     const chat = model.startChat({
-      history: messages.slice(0, -1).map((m: any) => ({
+      history: historyMessages.map((m: any) => ({
         role: m.role === "user" ? "user" : "model",
         parts: [{ text: m.content }],
       })),

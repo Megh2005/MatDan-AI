@@ -1,0 +1,16 @@
+services:
+  matdata-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GEMINI_API_KEY: ${GEMINI_API_KEY}
+        SERP_API_KEY: ${SERP_API_KEY}
+    container_name: matdata-ai-portal
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    restart: always

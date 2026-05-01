@@ -1,0 +1,24 @@
+.chakraContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.chakraSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.animate {
+  animation: rotate 60s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

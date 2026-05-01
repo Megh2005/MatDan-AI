@@ -1,0 +1,117 @@
+.mainContainer {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  color: #171717;
+}
+
+.backgroundPatterns {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gradientTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background: radial-gradient(circle at 10% 0%, rgba(255, 153, 51, 0.08) 0%, transparent 50%);
+}
+
+.gradientBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background: radial-gradient(circle at 90% 100%, rgba(19, 136, 8, 0.08) 0%, transparent 50%);
+}
+
+.header {
+  height: 80px;
+  padding: 0 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #000080;
+}
+
+.logoText .highlight {
+  color: #FF9933;
+}
+
+.resetButton {
+  padding: 0.5rem 1.25rem;
+  border-radius: 99px;
+  border: 1px solid #ddd;
+  background: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.resetButton:hover {
+  background: #f8f9fa;
+  border-color: #000080;
+  color: #000080;
+}
+
+.content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+  padding: 2rem 4rem;
+  z-index: 1;
+}
+
+.canvasWrapper {
+  height: calc(100vh - 200px);
+}
+
+.chatWrapper {
+  height: calc(100vh - 200px);
+}
+
+.footer {
+  height: 60px;
+  padding: 0 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  color: #666;
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+  z-index: 10;
+}
+
+@media (max-width: 1200px) {
+  .content {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+  }
+  
+  .header {
+    padding: 0 2rem;
+  }
+
+  .canvasWrapper, .chatWrapper {
+    height: auto;
+    min-height: 500px;
+  }
+}

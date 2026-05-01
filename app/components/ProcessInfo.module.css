@@ -1,0 +1,38 @@
+.infoCard {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 16px;
+  border-left: 4px solid #FF9933; /* Indian Saffron */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.infoTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #000080;
+}
+
+.infoTitle h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.infoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.infoList li {
+  font-size: 0.85rem;
+  color: #555;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.infoList li:last-child {
+  border-bottom: none;
+}

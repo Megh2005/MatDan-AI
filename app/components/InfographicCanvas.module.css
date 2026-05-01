@@ -1,0 +1,172 @@
+.canvasContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+}
+
+.brandingView {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brandingTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-top: 1.5rem;
+  color: #000080;
+  letter-spacing: -0.02em;
+}
+
+.brandingSubtitle {
+  font-size: 1.25rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+/* Timeline Styles */
+.timelineContainer {
+  width: 100%;
+  max-width: 800px;
+}
+
+.timelineContainer h3 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #000080;
+  text-align: center;
+}
+
+.timelineGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stepCard {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.activeStep {
+  border-color: #FF9933;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(255, 153, 51, 0.15);
+}
+
+.completedStep {
+  background: rgba(19, 136, 8, 0.05);
+  border-color: rgba(19, 136, 8, 0.2);
+}
+
+.stepIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  color: #000080;
+}
+
+.activeStep .stepIcon {
+  background: #FF9933;
+  color: white;
+}
+
+.stepCard h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.stepCard p {
+  font-size: 0.875rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* EVM Styles */
+.evmContainer {
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+}
+
+.evmGrid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.evmPart {
+  width: 180px;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #eee;
+  transition: all 0.3s ease;
+}
+
+.highlight {
+  border-color: #138808;
+  background: rgba(19, 136, 8, 0.05);
+  transform: scale(1.05);
+}
+
+.partBox {
+  height: 100px;
+  background: #333;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-weight: bold;
+}
+
+/* Stats Styles */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.statItem {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #FF9933;
+}
+
+.statLabel {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 0.5rem;
+}

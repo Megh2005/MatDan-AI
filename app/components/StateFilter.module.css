@@ -1,0 +1,29 @@
+.filterContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 99px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #138808; /* Indian Green */
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.select {
+  border: none;
+  background: transparent;
+  font-weight: 500;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+  min-width: 150px;
+}

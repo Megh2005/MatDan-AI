@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import { InfographicCanvas, UIAction } from './components/InfographicCanvas';
 import { ChatInterface } from './components/ChatInterface';
-import { TripleTabs } from './components/TripleTabs';
 import { StateFilter } from './components/StateFilter';
 import { EVMIcon } from './components/EVMIcon';
+import Link from 'next/link';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -34,19 +34,15 @@ export default function Home() {
           </div>
         </div>
 
-        <div className={styles.headerCenter}>
-          <StateFilter selectedState={selectedState} onStateChange={setSelectedState} />
-        </div>
+        <nav className={styles.headerCenter}>
+          <Link href="/" className={styles.navBtn} style={{ borderColor: '#000080' }}>🏠 Home</Link>
+          <Link href="/voters" className={styles.navBtn}>👥 Voters</Link>
+          <Link href="/law" className={styles.navBtn}>⚖️ Law</Link>
+          <Link href="/candidates" className={styles.navBtn}>📋 Candidates</Link>
+          <Link href="/voter-education" className={styles.navBtn}>📚 Education</Link>
+        </nav>
 
         <nav className={styles.headerRight}>
-          <button
-            className={styles.navBtn}
-            onClick={() => setCurrentAction({ action: 'show_evm' })}
-          >🗳️ EVM Guide</button>
-          <button
-            className={styles.navBtn}
-            onClick={() => setCurrentAction({ action: 'show_law' })}
-          >⚖️ Law & ID</button>
           <button
             className={`${styles.navBtn} ${styles.resetBtn}`}
             onClick={() => setCurrentAction({ action: 'reset' })}
@@ -54,13 +50,8 @@ export default function Home() {
         </nav>
       </header>
 
-      <main className={styles.main}>
-        {/* Left Column - Tabbed Information Hub */}
-        <aside className={styles.sidePanel}>
-          <TripleTabs />
-        </aside>
-
-        {/* Center Column - Interactive Infographics */}
+      <main className={styles.mainClear}>
+        {/* Main Section - Interactive Infographics */}
         <section className={styles.centerPanel}>
           <div className={styles.infographicBox}>
             <InfographicCanvas currentAction={currentAction} selectedState={selectedState} />
@@ -81,8 +72,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Right Column - Chat Assistant */}
-        <aside className={`${styles.sidePanel} ${styles.chatPanel}`}>
+        {/* Chat Assistant */}
+        <aside className={styles.chatAside}>
           <ChatInterface onMessageReceived={handleMessage} selectedState={selectedState} />
         </aside>
       </main>

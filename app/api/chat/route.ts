@@ -4,53 +4,66 @@ import { NextRequest, NextResponse } from "next/server";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 const SYSTEM_PROMPT = `
-You are the "Indian Election Assistant", named "Matdata AI".
-Your goal is to help users understand how elections work in India in an easy-to-follow, infographic-style way.
+You are "Matdata AI", an Indian Election Assistant.
 
-IMPORTANT BEHAVIOR:
-1. When a user asks a question about elections or result dates, you MUST FIRST ensure you know their **State** and **City**. 
-2. If they haven't provided it, ask: "To give you the most accurate info, could you please tell me your **State** and **City**?"
-3. Once you have their location, use the following knowledge to find the closest election/result:
-   - Recent 2025: Delhi (Feb 5), Bihar (Nov 2025).
-   - Upcoming April 2026: Assam, Kerala, Puducherry (Polling April 9, 2026), Tamil Nadu, West Bengal (Polling April 23 & 29, 2026).
-   - Counting Date for 2026 elections: May 4, 2026.
-   - Upcoming 2027: Goa, Manipur, Punjab, Uttarakhand, Uttar Pradesh, Gujarat, Himachal Pradesh.
-4. You can trigger UI changes by including a special JSON block at the end of your response:
-   [UI_ACTION: {"action": "ACTION_NAME", "data": { ... }}]
+CONVERSATION RULES:
+1. GREETING: Only introduce yourself in the VERY FIRST response. For subsequent messages, provide direct answers.
+2. AUTOMATIC LOCATION: You will receive location context in the format [Location: Lat X, Lng Y]. 
+   - Use these coordinates to determine the user's State and City automatically.
+   - Do NOT ask the user for their location if coordinates are provided.
+3. CONSOLIDATED KNOWLEDGE: You are a multi-tier election hub. Consider: Lok Sabha, Vidhan Sabha, Municipality, and Panchayat.
+4. REAL-TIME DATA: You will be provided with live search results from SerpApi. Use these to give EXACT dates and names of upcoming elections or recent results.
+5. UI ACTIONS: Use [UI_ACTION: {"action": "ACTION_NAME", "data": { ... }}] only when relevant.
 
-Available actions:
-1. "show_evm": Shows an infographic about EVM and VVPAT. Data: { "highlight": "ballot_unit" | "control_unit" | "vvpat" }
-2. "show_stats": Shows key statistics. Data: { "topic": string }
-3. "show_law": Shows election laws and ID requirements.
-4. "reset": Returns to home.
-
-Tone: Professional, helpful, patriotic. Use the India palette (Saffron, White, Green).
+Tone: Direct, helpful, beginner-friendly. Follow the Indian Constitution and ECI rules strictly.
 `;
+
+async function getSerpData(query: string) {
+  if (!process.env.SERP_API_KEY) return null;
+  try {
+    const url = `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&engine=google&google_domain=google.co.in&gl=in&hl=en&api_key=${process.env.SERP_API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    
+    // Extract snippets for context
+    const snippets = data.organic_results?.slice(0, 3).map((r: any) => r.snippet).join("\n") || "";
+    const answerBox = data.answer_box?.answer || data.answer_box?.snippet || "";
+    return `Search Context: ${answerBox}\n${snippets}`;
+  } catch (err) {
+    return null;
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
-    // Find the index of the first user message
+    const latestMsg = messages[messages.length - 1].content;
+    
+    // Detect if we have location to do a better search
+    const locMatch = latestMsg.match(/\[Location: Lat (.*?), Lng (.*?)\]/);
+    let searchContext = "";
+    
+    if (locMatch) {
+      const query = `upcoming elections in India ${locMatch[1]} ${locMatch[2]} Lok Sabha Vidhan Sabha Municipality 2026 2027`;
+      searchContext = await getSerpData(query) || "";
+    } else {
+      searchContext = await getSerpData("upcoming elections in India 2026 2027") || "";
+    }
+
     const firstUserIndex = messages.findIndex((m: any) => m.role === "user");
     const historyMessages = firstUserIndex !== -1 ? messages.slice(firstUserIndex, -1) : [];
 
-    // Format chat history for Gemini
     const chat = model.startChat({
       history: historyMessages.map((m: any) => ({
         role: m.role === "user" ? "user" : "model",
         parts: [{ text: m.content }],
       })),
-      generationConfig: {
-        maxOutputTokens: 1000,
-      },
+      generationConfig: { maxOutputTokens: 1000 },
     });
 
-    // Add system prompt to the first message or as a context
-    // For simplicity in this demo, we'll prepend it to the latest message or use it in the initial state
-    const latestMessage = messages[messages.length - 1].content;
-    const prompt = `${SYSTEM_PROMPT}\n\nUser: ${latestMessage}`;
+    const prompt = `${SYSTEM_PROMPT}\n\n${searchContext ? `REAL-TIME SEARCH DATA:\n${searchContext}\n\n` : ''}User: ${latestMsg}`;
 
     const result = await chat.sendMessage(prompt);
     const response = await result.response;

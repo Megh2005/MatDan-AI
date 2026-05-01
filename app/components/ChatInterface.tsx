@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, MapPin } from 'lucide-react';
 import { EVMIcon } from './EVMIcon';
 import styles from './ChatInterface.module.css';
 import ReactMarkdown from 'react-markdown';
@@ -28,30 +28,32 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `नमस्ते! I'm **Matdata**, your AI guide to India's democratic process. ${selectedState ? `I see you're interested in **${selectedState}**! ` : ''}Ask me anything about elections, voting rights, timelines, or the constitution. I can also update the info panel on the left with live infographics! 🇮🇳`
+      content: `नमस्ते! I'm **Matdata**, your AI guide to India's democratic process. Ask me anything about elections, voting rights, or the constitution. I've automatically detected your location to provide local results! 🇮🇳`
     }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [coords, setCoords] = useState<{lat: number, lng: number} | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setCoords({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+      }, (error) => {
+        console.error("Location access denied or failed", error);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isLoading]);
-
-  useEffect(() => {
-    if (selectedState) {
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: `📍 Switched to **${selectedState}**. You can now ask me about Lok Sabha & Vidhan Sabha seats, past election results, and voter turnout specific to ${selectedState}!`
-        }
-      ]);
-    }
-  }, [selectedState]);
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
@@ -62,15 +64,16 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
     setIsLoading(true);
 
     try {
-      const payload = selectedState
-        ? updatedMessages.map(m =>
-            m === updatedMessages[0]
-              ? m
-              : m.role === 'user' && m === updatedMessages[updatedMessages.length - 1]
-              ? { ...m, content: `[State context: ${selectedState}] ${m.content}` }
-              : m
-          )
-        : updatedMessages;
+      // Inject coordinates into the latest message context
+      const contextPrefix = coords 
+        ? `[Location: Lat ${coords.lat.toFixed(4)}, Lng ${coords.lng.toFixed(4)}] ` 
+        : (selectedState ? `[State: ${selectedState}] ` : '');
+      
+      const payload = updatedMessages.map((m, i) => 
+        (i === updatedMessages.length - 1 && m.role === 'user')
+          ? { ...m, content: contextPrefix + m.content }
+          : m
+      );
 
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -94,14 +97,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
     sendMessage(input);
   };
 
-  // Helper to clean message content
   const getCleanContent = (text: string) => {
     return text.replace(/\[UI_ACTION:.*?\]/g, '').trim();
   };
 
   return (
     <div className={styles.chatWrapper}>
-      {/* Header */}
       <div className={styles.chatHeader}>
         <div className={styles.botIdentity}>
           <div className={styles.botIconWrap}>
@@ -110,16 +111,17 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
           <div>
             <div className={styles.botName}>Matdata AI</div>
             <div className={styles.botStatus}>
-              <span className={styles.dot}></span> Online · India's Election Guide
+              <span className={styles.dot}></span> {coords ? 'Location Detected' : 'Online'}
             </div>
           </div>
         </div>
-        {selectedState && (
-          <div className={styles.stateTag}>📍 {selectedState}</div>
+        {coords && (
+          <div className={styles.stateTag} title={`${coords.lat}, ${coords.lng}`}>
+            Active
+          </div>
         )}
       </div>
 
-      {/* Quick prompts */}
       <div className={styles.quickPrompts}>
         {QUICK_PROMPTS.map((p, i) => (
           <button key={i} className={styles.quickBtn} onClick={() => sendMessage(p)}>
@@ -128,7 +130,6 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
         ))}
       </div>
 
-      {/* Messages */}
       <div className={styles.messages} ref={scrollRef}>
         {messages.map((m, i) => (
           <div key={i} className={`${styles.message} ${m.role === 'user' ? styles.userMsg : styles.botMsg}`}>
@@ -155,13 +156,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMessageReceived,
         )}
       </div>
 
-      {/* Input */}
       <form className={styles.inputRow} onSubmit={handleSubmit}>
         <input
           className={styles.input}
           value={input}
           onChange={e => setInput(e.target.value)}
-          placeholder="Ask Matdata about Indian elections..."
+          placeholder="Ask Matdata about local elections..."
           disabled={isLoading}
         />
         <button type="submit" className={styles.sendBtn} disabled={isLoading || !input.trim()}>
